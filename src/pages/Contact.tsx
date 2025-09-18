@@ -5,6 +5,10 @@ import {
   MapPin, Phone, Mail, Clock, Send, CheckCircle, 
   MessageCircle, User, Building 
 } from 'lucide-react'
+import Form from '../components/Form/Form'
+import FormField from '../components/Form/FormField'
+import { commonValidationRules } from '../utils/validation'
+import toast from 'react-hot-toast'
 
 const contactInfo = [
   {
@@ -85,7 +89,9 @@ const enquiryTypes = [
 ]
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const initialFormData = {
     name: '',
     email: '',
     phone: '',
@@ -93,38 +99,38 @@ export default function Contact() {
     enquiryType: '',
     subject: '',
     message: ''
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+  const validationRules = {
+    name: { ...commonValidationRules.name, required: true },
+    email: { ...commonValidationRules.email, required: true },
+    phone: { ...commonValidationRules.phone, required: false },
+    company: { required: false, minLength: 2, maxLength: 100 },
+    enquiryType: { required: true },
+    subject: { required: true, minLength: 5, maxLength: 100 },
+    message: { required: true, minLength: 20, maxLength: 1000 }
+  }
+
+  const handleSubmit = async (data: any, isValid: boolean) => {
+    if (!isValid) {
+      toast.error('Please fix the errors in the form before submitting')
+      return
+    }
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-    
-    // Reset form after showing success message
-    setTimeout(() => {
-      setIsSubmitted(false)
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        enquiryType: '',
-        subject: '',
-        message: ''
-      })
-    }, 3000)
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      setIsSubmitted(true)
+      toast.success('Thank you for your message! We will get back to you soon.')
+      
+      // Reset form after showing success message
+      setTimeout(() => {
+        setIsSubmitted(false)
+      }, 5000)
+    } catch (error) {
+      toast.error('Failed to send message. Please try again.')
+    }
   }
 
   return (
@@ -149,344 +155,279 @@ export default function Contact() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
+          {/* Contact Information */}
+          <div className="lg:col-span-1 space-y-8">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8"
             >
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                  Send Us a Message
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Fill out the form below and we'll get back to you within 24 hours.
-                </p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                Contact Information
+              </h2>
+              
+              <div className="space-y-6">
+                {contactInfo.map((info, index) => {
+                  const Icon = info.icon
+                  return (
+                    <motion.div
+                      key={info.title}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1, duration: 0.5 }}
+                      className="flex items-start space-x-4"
+                    >
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                          {info.title}
+                        </h3>
+                        <div className="space-y-1">
+                          {info.details.map((detail, detailIndex) => (
+                            <p key={detailIndex} className="text-gray-600 dark:text-gray-400 text-sm">
+                              {detail}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )
+                })}
               </div>
+            </motion.div>
 
-              {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Name and Email Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Full Name *
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          required
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                          placeholder="Your full name"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Email Address *
-                      </label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          required
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                          placeholder="your@email.com"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Phone and Company Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Phone Number *
-                      </label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                        <input
-                          type="tel"
-                          id="phone"
-                          name="phone"
-                          required
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                          placeholder="+91 9999-123-456"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Company Name
-                      </label>
-                      <div className="relative">
-                        <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                        <input
-                          type="text"
-                          id="company"
-                          name="company"
-                          value={formData.company}
-                          onChange={handleInputChange}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                          placeholder="Your company (optional)"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Enquiry Type and Subject */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="enquiryType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Enquiry Type *
-                      </label>
-                      <select
-                        id="enquiryType"
-                        name="enquiryType"
-                        required
-                        value={formData.enquiryType}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            {/* Office Locations */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6"
+            >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Our Locations
+              </h3>
+              
+              <div className="space-y-4">
+                {officeLocations.map((location, index) => (
+                  <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-4 last:border-b-0 last:pb-0">
+                    <h4 className="font-medium text-gray-900 dark:text-white">
+                      {location.city}
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      {location.address}
+                    </p>
+                    <div className="flex items-center space-x-4 mt-2">
+                      <a
+                        href={`tel:${location.phone}`}
+                        className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400"
                       >
-                        <option value="">Select enquiry type</option>
-                        {enquiryTypes.map((type) => (
-                          <option key={type} value={type}>{type}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Subject *
-                      </label>
-                      <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        required
-                        value={formData.subject}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        placeholder="Brief subject of your enquiry"
-                      />
+                        {location.phone}
+                      </a>
+                      <a
+                        href={`mailto:${location.email}`}
+                        className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400"
+                      >
+                        {location.email}
+                      </a>
                     </div>
                   </div>
-
-                  {/* Message */}
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Message *
-                    </label>
-                    <div className="relative">
-                      <MessageCircle className="absolute left-3 top-4 text-gray-400 w-5 h-5" />
-                      <textarea
-                        id="message"
-                        name="message"
-                        required
-                        rows={5}
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        placeholder="Please provide details about your enquiry, including any specific requirements..."
-                      />
-                    </div>
-                  </div>
-
-                  {/* Submit Button */}
-                  <motion.button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center space-x-2"
-                    whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                        <span>Sending...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-5 h-5" />
-                        <span>Send Message</span>
-                      </>
-                    )}
-                  </motion.button>
-                </form>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-12"
-                >
-                  <div className="w-20 h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
-                  </div>
-                  <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-                    Message Sent Successfully!
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Thank you for reaching out. We'll get back to you within 24 hours.
-                  </p>
-                </motion.div>
-              )}
+                ))}
+              </div>
             </motion.div>
           </div>
 
-          {/* Contact Information */}
-          <div className="space-y-6">
-            {/* Contact Info Cards */}
-            {contactInfo.map((info, index) => (
-              <motion.div
-                key={info.title}
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/20 rounded-lg flex items-center justify-center">
-                    <info.icon className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {info.title}
-                  </h3>
-                </div>
-                <div className="space-y-1">
-                  {info.details.map((detail, idx) => (
-                    <p key={idx} className="text-gray-600 dark:text-gray-400 text-sm">
-                      {detail}
-                    </p>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-
-            {/* Quick Actions */}
+          {/* Contact Form */}
+          <div className="lg:col-span-2">
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="bg-primary-50 dark:bg-primary-900/10 rounded-lg p-6 border border-primary-100 dark:border-primary-800"
+              transition={{ duration: 0.8 }}
             >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Need Immediate Help?
-              </h3>
-              <div className="space-y-3">
-                <a
-                  href="tel:+919999123456"
-                  className="flex items-center space-x-3 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
-                >
-                  <Phone className="w-5 h-5" />
-                  <span className="font-medium">Call Sales: +91 9999-123-456</span>
-                </a>
-                <a
-                  href="https://wa.me/919999123456"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-3 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  <span className="font-medium">WhatsApp Support</span>
-                </a>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    Send us a Message
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Fill out the form below and we'll get back to you within 24 hours.
+                  </p>
+                </div>
+
+                {isSubmitted ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-8"
+                  >
+                    <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      Message Sent Successfully!
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Thank you for contacting us. We'll respond within 24 hours.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <Form
+                    onSubmit={handleSubmit}
+                    validationRules={validationRules}
+                    initialData={initialFormData}
+                    submitText="Send Message"
+                    validateOnChange={true}
+                    validateOnBlur={true}
+                    resetOnSubmit={true}
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormField
+                        name="name"
+                        label="Full Name"
+                        type="text"
+                        icon={User}
+                        placeholder="Enter your full name"
+                        required
+                        validation={{ showSuccess: true }}
+                      />
+
+                      <FormField
+                        name="email"
+                        label="Email Address"
+                        type="email"
+                        icon={Mail}
+                        placeholder="Enter your email address"
+                        required
+                        validation={{ showOnFocus: true, showSuccess: true }}
+                      />
+
+                      <FormField
+                        name="phone"
+                        label="Phone Number"
+                        type="tel"
+                        icon={Phone}
+                        placeholder="Enter your phone number"
+                        helpText="Optional - We may call you for clarifications"
+                        validation={{ showOnFocus: true }}
+                      />
+
+                      <FormField
+                        name="company"
+                        label="Company Name"
+                        type="text"
+                        icon={Building}
+                        placeholder="Enter your company name"
+                        helpText="Optional - Helps us understand your business needs"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormField
+                        name="enquiryType"
+                        label="Enquiry Type"
+                        type="select"
+                        placeholder="Select enquiry type"
+                        options={enquiryTypes.map(type => ({ label: type, value: type }))}
+                        required
+                      />
+
+                      <FormField
+                        name="subject"
+                        label="Subject"
+                        type="text"
+                        placeholder="Enter subject"
+                        required
+                        validation={{ showSuccess: true }}
+                      />
+                    </div>
+
+                    <FormField
+                      name="message"
+                      label="Message"
+                      type="textarea"
+                      icon={MessageCircle}
+                      placeholder="Please describe your requirements or questions in detail..."
+                      rows={6}
+                      required
+                      helpText="Minimum 20 characters - The more details you provide, the better we can assist you"
+                      validation={{ showSuccess: true }}
+                    />
+                  </Form>
+                )}
               </div>
             </motion.div>
           </div>
         </div>
 
-        {/* Office Locations */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mt-20"
-        >
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Our Office Locations
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
-              Find us across major cities in India
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {officeLocations.map((office, index) => (
-              <motion.div
-                key={office.city}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow"
-              >
-                <div className="flex items-center space-x-2 mb-4">
-                  <MapPin className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {office.city}
-                  </h3>
-                </div>
-                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                  <p>{office.address}</p>
-                  <p className="flex items-center space-x-1">
-                    <Phone className="w-4 h-4" />
-                    <span>{office.phone}</span>
-                  </p>
-                  <p className="flex items-center space-x-1">
-                    <Mail className="w-4 h-4" />
-                    <span>{office.email}</span>
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
         {/* Map Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mt-20"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-16"
         >
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Find Us on Map
-              </h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+            <div className="p-8 pb-0">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Find Our Head Office
+              </h2>
               <p className="text-gray-600 dark:text-gray-400">
-                Visit our head office in Ghaziabad
+                Visit us at our head office in Ghaziabad for direct consultation and product demonstrations.
               </p>
             </div>
-            <div className="h-80 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+            
+            <div className="h-96 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+              {/* Placeholder for map - would integrate with Google Maps API */}
               <div className="text-center">
-                <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">
-                  Interactive map will be integrated here
+                  Interactive map would be integrated here
                 </p>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
-                  SBE Earthing Solutions Pvt. Ltd.<br />
                   Plot No. 45, Industrial Area, Ghaziabad, UP 201001
                 </p>
               </div>
             </div>
+          </div>
+        </motion.div>
+
+        {/* Quick Contact Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
+          <div className="bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl p-6 text-white text-center">
+            <Phone className="w-12 h-12 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Call Us Now</h3>
+            <p className="mb-4 opacity-90">Speak directly with our experts</p>
+            <a
+              href="tel:+919999123456"
+              className="inline-block bg-white text-primary-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+            >
+              +91 9999-123-456
+            </a>
+          </div>
+
+          <div className="bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl p-6 text-white text-center">
+            <Mail className="w-12 h-12 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Email Us</h3>
+            <p className="mb-4 opacity-90">Get detailed information via email</p>
+            <a
+              href="mailto:sales@sbeearthing.com"
+              className="inline-block bg-white text-secondary-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+            >
+              sales@sbeearthing.com
+            </a>
+          </div>
+
+          <div className="bg-gradient-to-br from-accent-500 to-accent-600 rounded-2xl p-6 text-white text-center">
+            <MessageCircle className="w-12 h-12 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Live Chat</h3>
+            <p className="mb-4 opacity-90">Get instant support online</p>
+            <button className="inline-block bg-white text-accent-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+              Start Chat
+            </button>
           </div>
         </motion.div>
       </div>

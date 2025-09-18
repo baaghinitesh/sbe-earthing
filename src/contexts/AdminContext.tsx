@@ -49,25 +49,27 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true)
       
-      // Simple fetch instead of axios for initial load
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
       
-      const data = await response.json()
+      // Check credentials
+      const validEmail = 'baaghinitesh@gmail.com'
+      const validPassword = 'nitesh@123'
       
-      if (data.success && data.data) {
-        const { token, ...adminData } = data.data
+      if (email === validEmail && password === validPassword) {
+        const adminData = {
+          id: '1',
+          name: 'Admin User',
+          email: 'baaghinitesh@gmail.com',
+          role: 'admin',
+          token: 'admin-token-' + Date.now()
+        }
         
         // Store token and admin data
-        localStorage.setItem('admin-token', token)
+        localStorage.setItem('admin-token', adminData.token)
         localStorage.setItem('admin-data', JSON.stringify(adminData))
         
-        setAdmin(data.data)
+        setAdmin(adminData)
         return true
       }
       
@@ -92,14 +94,9 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   const initializeAdmin = async (): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/init', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await response.json()
-      return data.success
+      // Simulate initialization - always return true for demo
+      await new Promise(resolve => setTimeout(resolve, 500))
+      return true
     } catch (error) {
       console.error('Admin initialization error:', error)
       return false

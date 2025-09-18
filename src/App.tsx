@@ -4,6 +4,8 @@ import { Toaster } from 'react-hot-toast'
 import Layout from './components/Layout/Layout'
 import LoadingSpinner from './components/UI/LoadingSpinner'
 import { useTheme } from './contexts/ThemeContext'
+import AdminLayout from './components/Admin/AdminLayout'
+import ProtectedRoute from './components/Auth/ProtectedRoute'
 
 // Lazy load components for better performance
 const Home = React.lazy(() => import('./pages/Home'))
@@ -18,6 +20,7 @@ const AdminProducts = React.lazy(() => import('./pages/Admin/AdminProducts'))
 const AdminContacts = React.lazy(() => import('./pages/Admin/AdminContacts'))
 const AdminFAQs = React.lazy(() => import('./pages/Admin/AdminFAQs'))
 const AdminTheme = React.lazy(() => import('./pages/Admin/AdminTheme'))
+const AdminProductForm = React.lazy(() => import('./pages/Admin/AdminProductForm'))
 const NotFound = React.lazy(() => import('./pages/NotFound'))
 
 function App() {
@@ -60,36 +63,61 @@ function App() {
           } />
         </Route>
 
-        {/* Admin Routes */}
+        {/* Admin Login Route (Public) */}
         <Route path="/admin/login" element={
           <Suspense fallback={<LoadingSpinner />}>
             <AdminLogin />
           </Suspense>
         } />
-        <Route path="/admin" element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminDashboard />
-          </Suspense>
-        } />
-        <Route path="/admin/products" element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminProducts />
-          </Suspense>
-        } />
-        <Route path="/admin/contacts" element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminContacts />
-          </Suspense>
-        } />
-        <Route path="/admin/faqs" element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminFAQs />
-          </Suspense>
-        } />
-        <Route path="/admin/theme" element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminTheme />
-          </Suspense>
+
+        {/* Protected Admin Routes */}
+        <Route path="/admin/*" element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <Routes>
+                <Route index element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminDashboard />
+                  </Suspense>
+                } />
+                <Route path="dashboard" element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminDashboard />
+                  </Suspense>
+                } />
+                <Route path="products" element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminProducts />
+                  </Suspense>
+                } />
+                <Route path="products/new" element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminProductForm />
+                  </Suspense>
+                } />
+                <Route path="products/edit/:id" element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminProductForm />
+                  </Suspense>
+                } />
+                <Route path="contacts" element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminContacts />
+                  </Suspense>
+                } />
+                <Route path="faqs" element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminFAQs />
+                  </Suspense>
+                } />
+                <Route path="theme" element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminTheme />
+                  </Suspense>
+                } />
+              </Routes>
+            </AdminLayout>
+          </ProtectedRoute>
         } />
 
         {/* 404 Route */}
