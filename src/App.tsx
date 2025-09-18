@@ -21,6 +21,8 @@ const AdminContacts = React.lazy(() => import('./pages/Admin/AdminContacts'))
 const AdminFAQs = React.lazy(() => import('./pages/Admin/AdminFAQs'))
 const AdminTheme = React.lazy(() => import('./pages/Admin/AdminTheme'))
 const AdminProductForm = React.lazy(() => import('./pages/Admin/AdminProductForm'))
+const AdminUsers = React.lazy(() => import('./pages/Admin/AdminUsers'))
+const AdminSettings = React.lazy(() => import('./pages/Admin/AdminSettings'))
 const NotFound = React.lazy(() => import('./pages/NotFound'))
 
 function App() {
@@ -113,6 +115,16 @@ function App() {
                 <Route path="theme" element={
                   <Suspense fallback={<LoadingSpinner />}>
                     <AdminTheme />
+                  </Suspense>
+                } />
+                <Route path="users" element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminUsers />
+                  </Suspense>
+                } />
+                <Route path="settings" element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AdminSettings />
                   </Suspense>
                 } />
               </Routes>

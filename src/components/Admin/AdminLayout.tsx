@@ -8,7 +8,8 @@ import {
   LogOut, 
   Menu, 
   X,
-  Palette
+  Palette,
+  ArrowLeft
 } from 'lucide-react';
 import { useAdmin } from '../../contexts/AdminContext';
 
@@ -71,6 +72,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           >
             <X className="h-5 w-5" />
           </button>
+        </div>
+        
+        {/* Back to Website Button */}
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <Link
+            to="/"
+            className="w-full flex items-center px-3 py-2 rounded-md text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:text-indigo-300 dark:hover:bg-indigo-900/20 transition-colors border border-indigo-200 dark:border-indigo-700"
+          >
+            <ArrowLeft className="mr-3 h-5 w-5" />
+            Back to Website
+          </Link>
         </div>
         
         <nav className="mt-4 px-4 space-y-2">
