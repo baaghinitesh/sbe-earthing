@@ -127,7 +127,7 @@ export default function Contact() {
       setTimeout(() => {
         setIsSubmitted(false)
       }, 5000)
-    } catch (error) {
+    } catch {
       toast.error('Failed to send message. Please try again.')
     }
   }
