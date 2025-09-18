@@ -6,7 +6,7 @@ import {
   MessageCircle, User, Building 
 } from 'lucide-react'
 import Form from '../components/Form/Form'
-import FormField from '../components/Form/FormField'
+import ContextFormField from '../components/Form/ContextFormField'
 import { commonValidationRules } from '../utils/validation'
 import toast from 'react-hot-toast'
 
@@ -280,7 +280,7 @@ export default function Contact() {
                     resetOnSubmit={true}
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
+                      <ContextFormField
                         name="name"
                         label="Full Name"
                         type="text"
@@ -290,7 +290,7 @@ export default function Contact() {
                         validation={{ showSuccess: true }}
                       />
 
-                      <FormField
+                      <ContextFormField
                         name="email"
                         label="Email Address"
                         type="email"
@@ -300,7 +300,7 @@ export default function Contact() {
                         validation={{ showOnFocus: true, showSuccess: true }}
                       />
 
-                      <FormField
+                      <ContextFormField
                         name="phone"
                         label="Phone Number"
                         type="tel"
@@ -310,7 +310,7 @@ export default function Contact() {
                         validation={{ showOnFocus: true }}
                       />
 
-                      <FormField
+                      <ContextFormField
                         name="company"
                         label="Company Name"
                         type="text"
@@ -321,7 +321,7 @@ export default function Contact() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
+                      <ContextFormField
                         name="enquiryType"
                         label="Enquiry Type"
                         type="select"
@@ -330,7 +330,7 @@ export default function Contact() {
                         required
                       />
 
-                      <FormField
+                      <ContextFormField
                         name="subject"
                         label="Subject"
                         type="text"
@@ -340,7 +340,7 @@ export default function Contact() {
                       />
                     </div>
 
-                    <FormField
+                    <ContextFormField
                       name="message"
                       label="Message"
                       type="textarea"
