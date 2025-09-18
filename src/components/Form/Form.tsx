@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
-import { FormValidator, ValidationRule } from '../../utils/validation';
+import { FormValidator, type ValidationRule } from '../../utils/validation';
 
 interface FormProps {
   children: React.ReactNode;

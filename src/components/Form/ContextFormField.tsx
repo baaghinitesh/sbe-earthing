@@ -1,5 +1,5 @@
 import React from 'react';
-import FormField, { FormFieldProps } from './FormField';
+import FormField, { type FormFieldProps } from './FormField';
 import { useForm } from './Form';
 
 interface ContextFormFieldProps extends Omit<FormFieldProps, 'value' | 'onChange' | 'error' | 'onBlur'> {

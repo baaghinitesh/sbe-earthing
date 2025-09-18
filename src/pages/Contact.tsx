@@ -1,7 +1,7 @@
 // React import not needed with new JSX transform
 import { useState } from 'react'
 import { 
-  MapPin, Phone, Mail, Clock, Send, CheckCircle, 
+  MapPin, Phone, Mail, Clock, CheckCircle, 
   MessageCircle, User, Building 
 } from 'lucide-react'
 import Form from '../components/Form/Form'
@@ -110,7 +110,7 @@ export default function Contact() {
     message: { required: true, minLength: 20, maxLength: 1000 }
   }
 
-  const handleSubmit = async (data: any, isValid: boolean) => {
+  const handleSubmit = async (_data: any, isValid: boolean) => {
     if (!isValid) {
       toast.error('Please fix the errors in the form before submitting')
       return
@@ -158,7 +158,7 @@ export default function Contact() {
               </h2>
               
               <div className="space-y-6">
-                {contactInfo.map((info, index) => {
+                {contactInfo.map((info) => {
                   const Icon = info.icon
                   return (
                     <div
