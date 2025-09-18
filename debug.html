@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test</title>
+    <style>
+        body { margin: 0; padding: 20px; background: #000; color: #fff; font-family: Arial, sans-serif; }
+        .test { background: #ff0000; padding: 50px; text-align: center; font-size: 24px; }
+    </style>
+</head>
+<body>
+    <div class="test">
+        <h1>🟢 STATIC HTML TEST</h1>
+        <p>If you see this, HTML is working!</p>
+        <p id="js-test">JavaScript not loaded yet...</p>
+    </div>
+    
+    <script>
+        console.log('🔥 JavaScript is running!');
+        document.getElementById('js-test').textContent = '✅ JavaScript is working!';
+        
+        // Test if we can access the React app root
+        const root = document.getElementById('root');
+        if (root) {
+            console.log('✅ Root element found:', root);
+        } else {
+            console.log('❌ Root element not found');
+        }
+    </script>
+</body>
+</html>
