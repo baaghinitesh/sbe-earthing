@@ -1,6 +1,5 @@
 // React import not needed with new JSX transform
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { 
   MapPin, Phone, Mail, Clock, Send, CheckCircle, 
   MessageCircle, User, Building 
@@ -138,18 +137,14 @@ export default function Contact() {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-600 via-primary-700 to-secondary-600 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
+          <div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Get in Touch
             </h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
               Have questions about our products or need technical support? Our team is here to help you find the perfect earthing solution.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -157,11 +152,7 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Contact Information */}
           <div className="lg:col-span-1 space-y-8">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
+            <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 Contact Information
               </h2>
@@ -170,11 +161,8 @@ export default function Contact() {
                 {contactInfo.map((info, index) => {
                   const Icon = info.icon
                   return (
-                    <motion.div
+                    <div
                       key={info.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
                       className="flex items-start space-x-4"
                     >
                       <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
@@ -192,19 +180,14 @@ export default function Contact() {
                           ))}
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   )
                 })}
               </div>
-            </motion.div>
+            </div>
 
             {/* Office Locations */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6"
-            >
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Our Locations
               </h3>
@@ -235,16 +218,12 @@ export default function Contact() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
+            <div>
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
                 <div className="mb-8">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -256,11 +235,7 @@ export default function Contact() {
                 </div>
 
                 {isSubmitted ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-8"
-                  >
+                  <div className="text-center py-8">
                     <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                       Message Sent Successfully!
@@ -268,7 +243,7 @@ export default function Contact() {
                     <p className="text-gray-600 dark:text-gray-400">
                       Thank you for contacting us. We'll respond within 24 hours.
                     </p>
-                  </motion.div>
+                  </div>
                 ) : (
                   <Form
                     onSubmit={handleSubmit}
@@ -354,17 +329,12 @@ export default function Contact() {
                   </Form>
                 )}
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
 
         {/* Map Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-16"
-        >
+        <div className="mt-16">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
             <div className="p-8 pb-0">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -388,15 +358,10 @@ export default function Contact() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Quick Contact Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8"
-        >
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl p-6 text-white text-center">
             <Phone className="w-12 h-12 mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Call Us Now</h3>
@@ -429,7 +394,7 @@ export default function Contact() {
               Start Chat
             </button>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   )
