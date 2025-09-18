@@ -2,10 +2,19 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  ZoomIn, Download, FileText, Star, Share2, Heart,
-  ChevronLeft, ChevronRight, Phone, Mail, MessageSquare,
-  ShoppingCart, Eye, Check, X, ArrowLeft
+  ZoomIn, FileText, Star, Share2, MessageSquare,
+  Check, X, ArrowLeft
 } from 'lucide-react'
+
+// Type definitions
+interface ProductVariant {
+  id: string
+  name: string
+  price: number
+  sku: string
+  stock: string
+  description: string
+}
 
 // Sample product data with variants
 const sampleProductData = {
@@ -180,7 +189,7 @@ function EnquiryModal({
   isOpen: boolean
   onClose: () => void
   productName: string
-  selectedVariant: any
+  selectedVariant: ProductVariant | null
 }) {
   const [formData, setFormData] = useState({
     name: '',

@@ -47,11 +47,16 @@ apiClient.interceptors.response.use(
 )
 
 // Types
-interface ApiResponse<T = any> {
+interface ValidationError {
+  field: string
+  message: string
+}
+
+interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   message?: string
-  errors?: any[]
+  errors?: ValidationError[]
 }
 
 interface LoginData {
@@ -75,7 +80,14 @@ interface ProductData {
   shortDescription: string
   category: string
   images?: Array<{ url: string; alt: string; isPrimary: boolean }>
-  variants?: any[]
+  variants?: Array<{
+    id: string
+    name: string
+    price: number
+    sku: string
+    stock: string
+    description: string
+  }>
   specifications?: Array<{ key: string; value: string }>
   features?: string[]
   applications?: string[]
@@ -96,6 +108,32 @@ interface FAQData {
   tags?: string[]
   order?: number
   relatedProducts?: string[]
+}
+
+interface ThemeData {
+  primaryColor?: string
+  secondaryColor?: string
+  accentColor?: string
+  logo?: string
+  favicon?: string
+  companyName?: string
+  companyTagline?: string
+  contactInfo?: {
+    email?: string
+    phone?: string
+    address?: string
+  }
+  socialMedia?: {
+    facebook?: string
+    twitter?: string
+    linkedin?: string
+    instagram?: string
+  }
+  seo?: {
+    title?: string
+    description?: string
+    keywords?: string[]
+  }
 }
 
 // Admin API
@@ -205,7 +243,7 @@ export const themeApi = {
   get: (): Promise<ApiResponse> => 
     apiClient.get('/admin/theme'),
     
-  update: (data: any): Promise<ApiResponse> => 
+  update: (data: ThemeData): Promise<ApiResponse> => 
     apiClient.put('/admin/theme', data),
 }
 

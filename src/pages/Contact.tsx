@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { 
   MapPin, Phone, Mail, Clock, Send, CheckCircle, 
-  MessageCircle, User, Building, ArrowRight 
+  MessageCircle, User, Building 
 } from 'lucide-react'
 
 const contactInfo = [
